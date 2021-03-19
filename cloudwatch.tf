@@ -8,5 +8,7 @@ resource "aws_cloudwatch_event_target" "check_every_day" {
   rule        = aws_cloudwatch_event_rule.every_day.name
   target_id   = "lambda"
   arn         = aws_lambda_function.rds_lambda.arn
-  input       = {"action": "stop","dbInstance": "rds-name"}
+  input = <<JSON
+    {"action": "stop","dbInstance": "rds-name"}
+JSON
 }
