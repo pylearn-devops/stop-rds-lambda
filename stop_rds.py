@@ -1,48 +1,51 @@
-''' run this script to stop rds '''
-
-import os
-import sys
+""" run this script to stop rds """
 import json
 import logging
+import os
+import sys
 
 import boto3
 import botocore
 from botocore.exceptions import ClientError
 
-rds = boto3.client('rds')
+rds = boto3.client("rds", region_name="us-east-1")
 logger = logging.getLogger()
 logger.setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
-    
-	logger.info("Event: " + str(event))
+    logger.info("Event: " + event)
 
-	dbInstance = event.get('dbInstance')
-	action = event.get('action')
-	if ('stop' == action):
-		stop_rds_instances(dbInstance)  	 
-	elif (action == 'start'):
-		start_rds_instances(dbInstance)
+    dbInstance = event.get("dbInstance")
+    print("----1-----")
+    action = event.get("action")
+    if "stop" == action:
+        stop_rds_instances(dbInstance)
+    elif action == "start":
+        start_rds_instances(dbInstance)
 
-	return {
-    	'statusCode': 200,
-    	'body': json.dumps("Script execution completed. See Cloudwatch logs for complete output")
-	}	
+    return {
+        "statusCode": 200,
+        "body": json.dumps(
+            "Script execution completed. See Cloudwatch logs for complete output"
+        ),
+    }
+
 
 ### stop rds instances
 def stop_rds_instances(dbInstance):
-	try:
-		rds.stop_db_instance(DBInstanceIdentifier=dbInstance)
-		logger.info('Success :: stop_db_instance ' + dbInstance) 
-	except ClientError as e:
-		logger.error(e)   
-	return "stopped:OK"
+    try:
+        rds.stop_db_instance(DBInstanceIdentifier=dbInstance)
+        logger.info("Success :: stop_db_instance " + dbInstance)
+    except ClientError as e:
+        logger.error(e)
+    return "stopped:OK"
+
 
 def start_rds_instances(dbInstance):
-	try:
-		rds.start_db_instance(DBInstanceIdentifier=dbInstance)
-		logger.info('Success :: start_db_instance ' + dbInstance) 
-	except ClientError as e:
-		logger.error(e)   
-	return "started:OK"
+    try:
+        rds.start_db_instance(DBInstanceIdentifier=dbInstance)
+        logger.info("Success :: start_db_instance " + dbInstance)
+    except ClientError as e:
+        logger.error(e)
+    return "started:OK"
