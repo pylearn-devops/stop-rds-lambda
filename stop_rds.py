@@ -14,10 +14,9 @@ logger.setLevel(logging.INFO)
 
 
 def lambda_handler(event, context):
-    logger.info("Event: " + event)
+    logger.info("Event: " + str(event))
 
     dbInstance = event.get("dbInstance")
-    print("----1-----")
     action = event.get("action")
     if "stop" == action:
         stop_rds_instances(dbInstance)
@@ -32,7 +31,7 @@ def lambda_handler(event, context):
     }
 
 
-### stop rds instances
+# stop rds instances
 def stop_rds_instances(dbInstance):
     try:
         rds.stop_db_instance(DBInstanceIdentifier=dbInstance)
@@ -42,6 +41,7 @@ def stop_rds_instances(dbInstance):
     return "stopped:OK"
 
 
+# starts rds instances
 def start_rds_instances(dbInstance):
     try:
         rds.start_db_instance(DBInstanceIdentifier=dbInstance)
