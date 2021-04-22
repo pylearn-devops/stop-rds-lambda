@@ -1,0 +1,6 @@
+[run]
+omit = /Users/akashbasa/evenv*
+branch = True
+
+[html]
+directory = coverage_html_report
