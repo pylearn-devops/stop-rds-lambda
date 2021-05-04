@@ -6,28 +6,24 @@ def branchName = env.BRANCH_NAME
 
 
 pipeline {
-    agent any
+  agent any
+
+  parameters {
+    choice(
+      name: 'Deploytype',
+      choices: ['apply', 'destroy'],
+      description: 'Deploy Type'
+    )
+  }
 
     stages {
 
-        stage ('select deploy type'){
-            def userInput = input(
-                    message: "select the below parameter to specify deployment type"
-                    parameters: [
-                        choice(
-                            name: 'deploytype',
-                            choices: 'provision\ndestroy'
-                        )
-                    ]
-                )
-        }
         stage('Create IAM Role') {
-            deploytype = userInput['deploytype']
             steps {
             sh'''
                 terraform init
                 terraform plan -out=plan
-                terraform deploytype plan
+                terraform ${params.Deploytype} plan
                 '''   
             }
         }
