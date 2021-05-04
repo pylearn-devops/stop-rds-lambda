@@ -15,7 +15,6 @@ logger.setLevel(logging.INFO)
 
 def lambda_handler(event, context):
     logger.info("Event: " + str(event))
-
     dbInstance = event.get("dbInstance")
     action = event.get("action")
     if "stop" == action:
